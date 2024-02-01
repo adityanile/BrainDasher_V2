@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float verticalInput;
 
+    public bool motionActive = true;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -22,8 +24,11 @@ public class PlayerController : MonoBehaviour
         verticalInput = Input.GetAxis("Vertical");
         horizontalInput = Input.GetAxis("Horizontal");
 
-        MoveVertically();
-        MoveHorizontally();
+        if (motionActive)
+        {
+            MoveVertically();
+            MoveHorizontally();
+        }
     }
 
     void MoveVertically()
@@ -52,4 +57,17 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector3.left * speed, ForceMode.Acceleration);
         }
     }
+
+    public void StopThePlayer()
+    {
+        motionActive = false;
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+    }
+    public void AllowMoveThePlayer()
+    {
+        motionActive = true;
+        rb.constraints = RigidbodyConstraints.None;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+    }
+
 }

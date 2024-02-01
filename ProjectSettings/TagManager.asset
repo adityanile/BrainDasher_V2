@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Barrier
+  - Gate1
+  - Gate2
+  - Gate3
+  - Gate4
+  - Gate5
+  - FinalGate
   layers:
   - Default
   - TransparentFX
