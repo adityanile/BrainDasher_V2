@@ -21,6 +21,8 @@ public class CollisionManager : MonoBehaviour
     private float animationTime = 1.5f;
     public Animator anim;
 
+    public ProgressBarManager progressBar;
+
     private void Awake()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();   

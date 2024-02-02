@@ -51,8 +51,28 @@ public class Clock : MonoBehaviour
         }
     }
 
+    public string GetCurrectTimeJSON()
+    {
+        string timejson = "";
+        Time time = new Time();
+
+        time.hour = hour;
+        time.minute = minute;
+        time.second = second;
+
+        timejson = JsonUtility.ToJson(time);
+
+        return timejson;
+    }
     public string DisplayTime()
     {
         return minute + ":" + second;
+    }
+
+    public class Time
+    {
+        public int hour;
+        public int minute;
+        public int second;
     }
 }

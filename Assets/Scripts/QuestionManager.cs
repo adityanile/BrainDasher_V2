@@ -15,6 +15,10 @@ public class QuestionManager : MonoBehaviour
     private CollisionManager collisionManager;
     private PlayerController playerController;
 
+    public ProgressBarManager progressBarManager;
+
+    public Data data = new Data();
+
     private void Awake()
     {
         if (!gameManager)
@@ -31,6 +35,7 @@ public class QuestionManager : MonoBehaviour
         }
 
         ResetData();
+        data.userId = MainManager.mainManager.userID;
     }
 
     public void SetQuestion(int _index, string _question, string _options)
@@ -46,6 +51,8 @@ public class QuestionManager : MonoBehaviour
 
         ResetData();
 
+        progressBarManager.ChangeState(index, false);
+
         playerController.AllowMoveThePlayer();
         //Also Activate Player aura
         gameObject.SetActive(false);
@@ -53,18 +60,34 @@ public class QuestionManager : MonoBehaviour
 
     public void OnClickSubmit()
     {
-        gameManager.ShowMsg("Question Answered");
+        if (solution.text != "" && solution.text != " ")
+        {
+            gameManager.ShowMsg("Question Answered");
+            gameManager.safePos = playerController.gameObject.transform.position;
 
-        gameManager.safePos = playerController.gameObject.transform.position;
-        gameManager.QuestionDone.Add(index, solution.text);
+            // Creating QuestionData JSON
+            QuestionData queData = new QuestionData();
 
-        collisionManager.lastHit.GetComponent<BoxCollider>().enabled = false;
+            queData.givenAns = solution.text;
+            queData.correctAns = gameManager.CorrectAnswers[index];
+            queData.time = gameManager.clock.GetCurrectTimeJSON();
 
-        ResetData();
+            data.QueData[index - 1] = queData;
 
-        collisionManager.anim.enabled = true;
-        gameObject.SetActive(false);
-        collisionManager.NextProcess();
+            collisionManager.lastHit.GetComponent<BoxCollider>().enabled = false;
+
+            progressBarManager.ChangeState(index, true);
+
+            ResetData();
+
+            collisionManager.anim.enabled = true;
+            gameObject.SetActive(false);
+            collisionManager.NextProcess();
+        }
+        else
+        {
+            gameManager.ShowMsg("No Valid Arguments");
+        }
     }
 
     void ResetData()
@@ -74,4 +97,21 @@ public class QuestionManager : MonoBehaviour
         solution.text = "";
     }
 
+    [System.Serializable]
+    public class Data
+    {
+        public string userId;
+        public string gameCompletionTime;
+        public QuestionData[] QueData = new QuestionData[5];
+    }
+
+
+    [System.Serializable]
+    public class QuestionData
+    {
+        public string givenAns;
+        public string correctAns;
+        public string time;
+    }
 }
+

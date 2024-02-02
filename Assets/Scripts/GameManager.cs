@@ -7,14 +7,18 @@ public class GameManager : MonoBehaviour
 {
     public Vector3 safePos;
 
-    public TextMeshProUGUI msg;
+    public GameObject msg;
 
     [SerializeField]
-    public Dictionary<int, string> QuestionDone = new Dictionary<int, string>();
+    public Dictionary<int, string> CorrectAnswers = new Dictionary<int, string>();
 
-    private Clock clock;
+    public Clock clock;
 
     public TextMeshProUGUI timerui;
+    public TextMeshProUGUI userID;
+
+    [SerializeField]
+    private QuestionManager queManager;
 
     private void Awake()
     {
@@ -22,6 +26,8 @@ public class GameManager : MonoBehaviour
         {
             clock = GameObject.Find("GameClock").GetComponent<Clock>();
         }
+        SetCorrectAnswers();
+        userID.text = "Player ID:- " + MainManager.mainManager.userID;
     }
 
     void Start()
@@ -40,33 +46,43 @@ public class GameManager : MonoBehaviour
         timerui.text = "Time:- " + clock.DisplayTime();
     }
 
+    private void SetCorrectAnswers()
+    {
+        CorrectAnswers[1] = "a";
+        CorrectAnswers[2] = "b";
+        CorrectAnswers[3] = "c";
+        CorrectAnswers[4] = "d";
+        CorrectAnswers[5] = "1";
+    }
+
     public void TouchedLastGate()
     {
         clock.StopClock();
         ShowMsg("Game Completed");
 
-        // Score Validating here
+        queManager.data.gameCompletionTime = clock.GetCurrectTimeJSON();
 
-        string result = "";
+        string jsonStr = "";
+        jsonStr = JsonUtility.ToJson(queManager.data);
+        Debug.Log(jsonStr);
 
-        foreach(var res in QuestionDone)
-        {
-            result += "Sr. No:- " + res.Key + " Ans:- " + res.Value + "\n";
-        }
-
-        ShowMsg(result);
+        // Save the JSON Copy of the Data and Load that in next scene
+        // Next Scene will be same in the other checker application
     }
 
     public void ShowMsg(string text)
     {
-        msg.text = text;
-        StartCoroutine(ClearMsg());
+        msg.SetActive(true);
+        TextMeshProUGUI txt = msg.GetComponentInChildren<TextMeshProUGUI>();
+        txt.text = text;
+        StartCoroutine(ClearMsg(txt));
     }
 
-    IEnumerator ClearMsg()
+    IEnumerator ClearMsg(TextMeshProUGUI txt)
     {
         yield return new WaitForSeconds(3);
-        msg.text = "";
+        txt.text = "";
+        msg.SetActive(false);
     }
 
 }
