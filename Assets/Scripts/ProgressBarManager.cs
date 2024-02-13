@@ -22,4 +22,10 @@ public class ProgressBarManager : MonoBehaviour
 
     }
 
+    public void QuestionSkipped(int index)
+    {
+        index--;
+        spot[index].color = Color.blue;
+    }
+
 }

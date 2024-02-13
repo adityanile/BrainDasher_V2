@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     public Dictionary<int, int> questionTries = new Dictionary<int, int>();
     public Dictionary<int, int> questionScore = new Dictionary<int, int>();
 
+    public int questionAnswered = 0;
+
     public Clock clock;
 
     public TextMeshProUGUI timerui;
@@ -29,6 +31,12 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreui;
     private int totalPoints = 0;
 
+    // For Final Gate Crystal Submission In the Portal
+    public GameObject[] crystals;
+    public float animWaitTime = 2;
+
+    private GameObject player;
+
     private void Awake()
     {
         if (!clock)
@@ -39,6 +47,8 @@ public class GameManager : MonoBehaviour
         userID.text = "Player ID:- " + MainManager.mainManager.userID;
 
         InitData();
+
+        player = GameObject.Find("Player");
     }
 
     void InitData()
@@ -78,12 +88,24 @@ public class GameManager : MonoBehaviour
         CorrectAnswers[5] = "1";
     }
 
+    // Crystals Generation
+    public IEnumerator GenerateCrystals(int num)
+    {
+        num--;
+
+        while (num >= 0)
+        {
+            Instantiate(crystals[num], player.gameObject.transform.position, crystals[num].transform.rotation);
+            num--;
+            yield return new WaitForSeconds(animWaitTime);
+        }
+
+        Debug.Log("Saved Data");
+        TouchedLastGate();
+    }
+
     public void TouchedLastGate()
     {
-        clock.StopClock();
-        ShowMsg("Game Completed");
-
-        queManager.data.gameCompletionTime = clock.GetCurrectTimeJSON();
         queManager.data.totalScore = totalPoints;
 
         string jsonStr = "";
@@ -96,7 +118,8 @@ public class GameManager : MonoBehaviour
         string jsonPath = Application.persistentDataPath + "userData.json";
 
         File.WriteAllText(jsonPath, jsonStr);
-        
+
+        FinalMsg();
     }
 
     public void ShowMsg(string text)
@@ -105,6 +128,13 @@ public class GameManager : MonoBehaviour
         TextMeshProUGUI txt = msg.GetComponentInChildren<TextMeshProUGUI>();
         txt.text = text;
         StartCoroutine(ClearMsg(txt));
+    }
+
+    public void FinalMsg()
+    {
+        msg.SetActive(true);
+        TextMeshProUGUI txt = msg.GetComponentInChildren<TextMeshProUGUI>();
+        txt.text = "Game Completed !";
     }
 
     IEnumerator ClearMsg(TextMeshProUGUI txt)

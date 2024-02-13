@@ -23,6 +23,11 @@ public class CollisionManager : MonoBehaviour
 
     public ProgressBarManager progressBar;
 
+    public GameObject confirmPopup;
+    public float hitoffset = -7;
+
+    [SerializeField]
+    private QuestionManager queManager;
 
     private void Awake()
     {
@@ -33,6 +38,7 @@ public class CollisionManager : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         questionWindow.SetActive(false);
+        confirmPopup.SetActive(false);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -46,9 +52,40 @@ public class CollisionManager : MonoBehaviour
         // Normal Collision with Final Gate
         if (collision.gameObject.CompareTag("FinalGate"))
         {
-            gameManager.TouchedLastGate();
+            confirmPopup.SetActive(true);
         }
     }
+
+    // Confirm Popup Before Final Gate Entry
+    public void OnClickFinalSubmit()
+    {
+        confirmPopup.SetActive(false);
+
+        player.gameObject.transform.position = new Vector3(player.transform.position.x, player.transform.position.y,
+                                                            player.transform.position.z + hitoffset);
+
+        // Final Game Process
+        gameManager.clock.StopClock();
+        queManager.data.gameCompletionTime = gameManager.clock.GetCurrectTimeJSON();
+
+        playerController.StopThePlayer();
+        StartSubmission();
+    }
+
+    public void StartSubmission()
+    {
+        StartCoroutine(gameManager.GenerateCrystals(gameManager.questionAnswered));
+    }
+
+    public void OnClickFinalNo()
+    {
+        confirmPopup.SetActive(false);
+        player.gameObject.transform.position = new Vector3( player.transform.position.x, player.transform.position.y,
+                                                            player.transform.position.z + hitoffset);
+
+        gameManager.ShowMsg("Back To The Game");
+    }
+
 
     // Managing Gate Collision in Here
     private void OnTriggerEnter(Collider other)
@@ -141,6 +178,14 @@ public class CollisionManager : MonoBehaviour
             lastHit = other.gameObject;
         }
         
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag.Contains("Gate"))
+        {
+            playerController.StopSkipAura();
+        }
     }
 
     public void NextProcess()

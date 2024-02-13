@@ -11,6 +11,7 @@ TagManager:
   - Gate4
   - Gate5
   - FinalGate
+  - Node
   layers:
   - Default
   - TransparentFX

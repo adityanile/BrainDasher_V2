@@ -26,7 +26,7 @@ public class MainManager : MonoBehaviour
     public void OnClickSubmit()
     {
         userID = id.text;
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 
 }

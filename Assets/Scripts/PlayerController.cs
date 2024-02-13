@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
 
     public bool motionActive = true;
 
+    public ParticleSystem skipAura;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -29,6 +31,15 @@ public class PlayerController : MonoBehaviour
             MoveVertically();
             MoveHorizontally();
         }
+    }
+
+    public void StartSkipAura()
+    {
+        skipAura.gameObject.SetActive(true);
+    }
+    public void StopSkipAura()
+    {
+        skipAura.gameObject.SetActive(false);
     }
 
     void MoveVertically()

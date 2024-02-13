@@ -53,7 +53,7 @@ public class QuestionManager : MonoBehaviour
 
     public void OnClickSkip()
     {
-        gameManager.ShowMsg("Question Skipped");
+        gameManager.ShowMsg("Power Missed");
 
         ResetData();
 
@@ -62,6 +62,10 @@ public class QuestionManager : MonoBehaviour
         playerController.AllowMoveThePlayer();
         //Also Activate Player aura
         gameObject.SetActive(false);
+
+        progressBarManager.QuestionSkipped(index);
+
+        playerController.StartSkipAura();
     }
 
     public void OnClickSubmit()
@@ -145,6 +149,9 @@ public class QuestionManager : MonoBehaviour
         collisionManager.anim.enabled = true;
         gameObject.SetActive(false);
         collisionManager.NextProcess();
+
+        // Increse The Corrrelty Solved Question Count for Crystals Generation
+        gameManager.questionAnswered++;
     }
 
     void NecessaryProcess()
