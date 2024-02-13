@@ -23,6 +23,7 @@ public class CollisionManager : MonoBehaviour
 
     public ProgressBarManager progressBar;
 
+
     private void Awake()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();   
@@ -51,75 +52,94 @@ public class CollisionManager : MonoBehaviour
 
     // Managing Gate Collision in Here
     private void OnTriggerEnter(Collider other)
-    {
-        
+    {   
             // Managing Gate1 collision
             if (other.gameObject.CompareTag("Gate1"))
             {
                 anim = other.gameObject.GetComponent<Animator>();
-                lastHit = other.gameObject;
-
-                playerController.StopThePlayer();
+                
+            playerController.StopThePlayer();
 
                 questionWindow.SetActive(true);
-                questionWindow.GetComponent<QuestionManager>().SetQuestion(1, "Question 1", "a b c d");
 
+                string tries = gameManager.questionTries[1].ToString();
+                string points = gameManager.questionScore[1].ToString();
+
+                questionWindow.GetComponent<QuestionManager>().SetQuestion(1, "Question 1", "a b c d",tries, points);
+
+            lastHit = other.gameObject;
             }
 
             // Managing Gate2 collision
             if (other.gameObject.CompareTag("Gate2"))
             {
-                lastHit = other.gameObject;
                 anim = other.gameObject.GetComponent<Animator>();
-
-                playerController.StopThePlayer();
+            
+            playerController.StopThePlayer();
 
                 questionWindow.SetActive(true);
-                questionWindow.GetComponent<QuestionManager>().SetQuestion(2, "Question 2", "a b c d");
 
+                string tries = gameManager.questionTries[2].ToString();
+                string points = gameManager.questionScore[2].ToString();
+
+                questionWindow.GetComponent<QuestionManager>().SetQuestion(2, "Question 2", "a b c d", tries, points) ;
+
+            lastHit = other.gameObject;
             }
 
 
             // Managing Gate3 collision
             if (other.gameObject.CompareTag("Gate3"))
             {
-                lastHit = other.gameObject;
                 anim = other.gameObject.GetComponent<Animator>();
 
-                playerController.StopThePlayer();
+            playerController.StopThePlayer();
 
                 questionWindow.SetActive(true);
-                questionWindow.GetComponent<QuestionManager>().SetQuestion(3, "Question 3", "a b c d");
 
+                string tries = gameManager.questionTries[3].ToString();
+                string points = gameManager.questionScore[3].ToString();
+
+                questionWindow.GetComponent<QuestionManager>().SetQuestion(3, "Question 3", "a b c d", tries, points);
+
+            lastHit = other.gameObject;
             }
 
 
             // Managing Gate4 collision
             if (other.gameObject.CompareTag("Gate4"))
             {
-                lastHit = other.gameObject;
                 anim = other.gameObject.GetComponent<Animator>();
 
-                playerController.StopThePlayer();
+            playerController.StopThePlayer();
 
                 questionWindow.SetActive(true);
-                questionWindow.GetComponent<QuestionManager>().SetQuestion(4, "Question 4", "a b c d");
 
-            }
+                string tries = gameManager.questionTries[4].ToString();
+                string points = gameManager.questionScore[4].ToString();
+
+            questionWindow.GetComponent<QuestionManager>().SetQuestion(4, "Question 4", "a b c d", tries, points);
+
+            lastHit = other.gameObject;
+        }
 
 
             // Managing Gate5 collision
             if (other.gameObject.CompareTag("Gate5"))
             {
-                lastHit = other.gameObject;
                 anim = other.gameObject.GetComponent<Animator>();
 
-                playerController.StopThePlayer();
+            playerController.StopThePlayer();
 
                 questionWindow.SetActive(true);
-                questionWindow.GetComponent<QuestionManager>().SetQuestion(5, "Question 5", "a b c d");
 
-            }
+                string tries = gameManager.questionTries[5].ToString();
+                string points = gameManager.questionScore[5].ToString();
+
+            questionWindow.GetComponent<QuestionManager>().SetQuestion(5, "Question 5", "a b c d", tries, points);
+
+            lastHit = other.gameObject;
+        }
         
     }
 
@@ -134,5 +154,11 @@ public class CollisionManager : MonoBehaviour
         anim.enabled = false;
 
         playerController.AllowMoveThePlayer();
+    }
+
+    public void DestroyGate()
+    {
+        Destroy(lastHit);
+        Debug.Log("Destroyed the last Gate");
     }
 }
