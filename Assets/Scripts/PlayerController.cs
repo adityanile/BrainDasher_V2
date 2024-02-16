@@ -47,12 +47,12 @@ public class PlayerController : MonoBehaviour
         // For Forward and Backward Movement
         if (verticalInput > 0)
         {
-            rb.AddForce(Vector3.forward * speed, ForceMode.Acceleration);
+            rb.AddForce(Vector3.forward * speed * Time.deltaTime, ForceMode.Acceleration);
         }
 
         if (verticalInput < 0)
         {
-            rb.AddForce(Vector3.back * speed, ForceMode.Acceleration);
+            rb.AddForce(Vector3.back * speed * Time.deltaTime, ForceMode.Acceleration);
         }
     }
 
@@ -60,12 +60,12 @@ public class PlayerController : MonoBehaviour
     {
         if (horizontalInput > 0)
         {
-            rb.AddForce(Vector3.right * speed, ForceMode.Acceleration);
+            rb.AddForce(Vector3.right * speed * Time.deltaTime, ForceMode.Acceleration);
         }
 
         if (horizontalInput < 0)
         {
-            rb.AddForce(Vector3.left * speed, ForceMode.Acceleration);
+            rb.AddForce(Vector3.left * speed * Time.deltaTime, ForceMode.Acceleration);
         }
     }
 

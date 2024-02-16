@@ -46,13 +46,20 @@ public class CollisionManager : MonoBehaviour
         // Colliding with a outer wall will reset the position to last safespot
         if (collision.gameObject.CompareTag("Barrier"))
         {
+            playerController.StopThePlayer();
             gameObject.transform.position = gameManager.safePos;
+            playerController.AllowMoveThePlayer();
         }
 
         // Normal Collision with Final Gate
         if (collision.gameObject.CompareTag("FinalGate"))
         {
             confirmPopup.SetActive(true);
+        }
+
+        if (collision.gameObject.CompareTag("SecureEdge"))
+        {
+            gameObject.transform.position = gameManager.safePos;
         }
     }
 
@@ -102,7 +109,7 @@ public class CollisionManager : MonoBehaviour
                 string tries = gameManager.questionTries[1].ToString();
                 string points = gameManager.questionScore[1].ToString();
 
-                questionWindow.GetComponent<QuestionManager>().SetQuestion(1, "Question 1", "a b c d",tries, points);
+                questionWindow.GetComponent<QuestionManager>().SetQuestion(1, gameManager.questions[0].image);
 
             lastHit = other.gameObject;
             }
@@ -119,7 +126,7 @@ public class CollisionManager : MonoBehaviour
                 string tries = gameManager.questionTries[2].ToString();
                 string points = gameManager.questionScore[2].ToString();
 
-                questionWindow.GetComponent<QuestionManager>().SetQuestion(2, "Question 2", "a b c d", tries, points) ;
+                questionWindow.GetComponent<QuestionManager>().SetQuestion(2, gameManager.questions[1].image) ;
 
             lastHit = other.gameObject;
             }
@@ -137,7 +144,7 @@ public class CollisionManager : MonoBehaviour
                 string tries = gameManager.questionTries[3].ToString();
                 string points = gameManager.questionScore[3].ToString();
 
-                questionWindow.GetComponent<QuestionManager>().SetQuestion(3, "Question 3", "a b c d", tries, points);
+                questionWindow.GetComponent<QuestionManager>().SetQuestion(3, gameManager.questions[2].image);
 
             lastHit = other.gameObject;
             }
@@ -155,7 +162,7 @@ public class CollisionManager : MonoBehaviour
                 string tries = gameManager.questionTries[4].ToString();
                 string points = gameManager.questionScore[4].ToString();
 
-            questionWindow.GetComponent<QuestionManager>().SetQuestion(4, "Question 4", "a b c d", tries, points);
+            questionWindow.GetComponent<QuestionManager>().SetQuestion(4, gameManager.questions[3].image);
 
             lastHit = other.gameObject;
         }
@@ -173,7 +180,7 @@ public class CollisionManager : MonoBehaviour
                 string tries = gameManager.questionTries[5].ToString();
                 string points = gameManager.questionScore[5].ToString();
 
-            questionWindow.GetComponent<QuestionManager>().SetQuestion(5, "Question 5", "a b c d", tries, points);
+            questionWindow.GetComponent<QuestionManager>().SetQuestion(5, gameManager.questions[4].image);
 
             lastHit = other.gameObject;
         }

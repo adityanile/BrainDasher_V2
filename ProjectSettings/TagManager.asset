@@ -12,6 +12,7 @@ TagManager:
   - Gate5
   - FinalGate
   - Node
+  - SecureEdge
   layers:
   - Default
   - TransparentFX

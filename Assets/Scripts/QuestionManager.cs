@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class QuestionManager : MonoBehaviour
 {
-    public TextMeshProUGUI question;
-    public TextMeshProUGUI options;
+    public Image question;
     public TextMeshProUGUI tries;
     public TextMeshProUGUI points;
 
@@ -41,14 +41,12 @@ public class QuestionManager : MonoBehaviour
         data.userId = MainManager.mainManager.userID;
     }
 
-    public void SetQuestion(int _index, string _question, string _options, string _tries, string _points)
+    public void SetQuestion(int _index, Sprite _question)
     {
         index = _index;
-        question.text = _question;
-        options.text = _options;
+        question.sprite = _question;
 
-        tries.text = _tries;
-        points.text = _points;
+        UpdateTriesScore();
     }
 
     public void OnClickSkip()
@@ -82,7 +80,7 @@ public class QuestionManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Wrong Answer");
+                    gameManager.ShowMsg("Wrong Answer");
                     gameManager.ForAWrongAnswer(index);
                     UpdateTriesScore();
 
@@ -117,13 +115,14 @@ public class QuestionManager : MonoBehaviour
 
     void UpdateTriesScore()
     {
-        tries.text = gameManager.questionTries[index].ToString();
-        points.text = gameManager.questionScore[index].ToString();
+        tries.text = "Tries Left:- " + gameManager.questionTries[index].ToString();
+        points.text = "Max Score:- " + gameManager.questionScore[index].ToString();
     }
 
     void SumbitTheSolution()
     {
-        gameManager.ShowMsg("Question Answered");
+
+        gameManager.ShowMsg("Magical Gem Collected");
         gameManager.safePos = playerController.gameObject.transform.position;
 
         // Creating QuestionData JSON
@@ -169,6 +168,8 @@ public class QuestionManager : MonoBehaviour
         if (gameManager.questionTries[index] == 2)
         {
             gameManager.ShowMsg("Final Try");
+            tries.color = Color.red;
+            points.color = Color.red;
         }
     }
 
@@ -193,9 +194,10 @@ public class QuestionManager : MonoBehaviour
 
     void ResetData()
     {
-        question.text = "";
-        options.text = "";
+        question.sprite = null;
         solution.text = "";
+        points.color = Color.white;
+        tries.color = Color.white;
     }
 
     [System.Serializable]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,18 +38,36 @@ public class GameManager : MonoBehaviour
 
     private GameObject player;
 
+    // For Random Question Initailisation
+    public QuestionData[] questions = new QuestionData[5];
+    public QuestionSplitter questionSplitter;
+
     private void Awake()
     {
         if (!clock)
         {
             clock = GameObject.Find("GameClock").GetComponent<Clock>();
         }
-        SetCorrectAnswers();
+
+        // Getting Random Question For the User
+        SetQuestionsData();
+
         userID.text = "Player ID:- " + MainManager.mainManager.userID;
 
+        // Initailise The Score and Tries
         InitData();
 
         player = GameObject.Find("Player");
+    }
+
+
+    void SetQuestionsData()
+    {
+        for(int i=0; i < questions.Length; i++) 
+        {
+            questions[i] = questionSplitter.GetMeAQuestion(i);
+            CorrectAnswers.Add(i + 1, questions[i].correctAns.ToString());
+        }
     }
 
     void InitData()
@@ -77,15 +96,6 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         timerui.text = "Time:- " + clock.DisplayTime();
-    }
-
-    private void SetCorrectAnswers()
-    {
-        CorrectAnswers[1] = "a";
-        CorrectAnswers[2] = "b";
-        CorrectAnswers[3] = "c";
-        CorrectAnswers[4] = "d";
-        CorrectAnswers[5] = "1";
     }
 
     // Crystals Generation
@@ -157,5 +167,11 @@ public class GameManager : MonoBehaviour
         totalPoints += increment;
         scoreui.text = "Points:- " + totalPoints.ToString();
     }
+}
 
+[System.Serializable]
+public class QuestionData
+{
+    public Sprite image;
+    public int correctAns;
 }
